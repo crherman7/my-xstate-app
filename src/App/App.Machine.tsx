@@ -22,7 +22,7 @@ export default function AppMachine({ children, onClick }: any) {
             // @ts-ignore
             invoke: {
               id: "onPromise",
-              src: (_ctx, _evt) => onClick(),
+              src: (_ctx, _evt) => onClick(_evt),
               onDone: {
                 target: "success",
                 actions: assign({ data: "Success!!" }),
@@ -46,8 +46,12 @@ export default function AppMachine({ children, onClick }: any) {
 
   const [state, send] = useMachine(appMachine);
 
+  const onSend = (id: string, event: {}) => () => {
+    send(id, event);
+  };
+
   return children({
-    send,
+    send: onSend,
     state,
   });
-};
+}
